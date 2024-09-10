@@ -6,24 +6,24 @@ const lista = [3, 1, 9, 8, 4, 6, 5, 0, 2, 7];
 
 function ordenarLista(parametro) {
 
-    var maior;
     var atual;
+    var listaOrdenada = parametro;
 
 
-    for (var i = parametro[0]; i <= parametro.lenght; i++) {
+    for (var i = 0; i <= parametro.lenght; i++) {
 
-        for (var j = parametro[i]; j <= parametro.lenght; j++) {
-            atual = parametro[j];
-            if (parametro[j] < parametro[i]) {
-                atual = parametro[j];
+        for (var j = i; j <= parametro.lenght; j++) {
+            if (j < i) {
+                atual = j;
+                
             }
+            i = atual;
+
         }
 
-        parametro[i] = atual;
+        
     }
-
-
-return parametro;
+    return parametro;
 
 }
 var resultado_da_minha_funcao = ordenarLista(lista);
