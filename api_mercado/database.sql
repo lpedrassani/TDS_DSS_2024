@@ -24,3 +24,17 @@ CREATE TABLE mercado.pedido(
     quantidade INT,
     total DECIMAL(9,2)
 );
+
+-- CRUD
+
+INSERT INTO mercado.cliente(nome, telefone)
+VALUES("Guilherme Pires", "46999756350");
+
+SELECT * FROM cleintes;
+
+UPDATE mercado.cliente SET nome = "Guilherme Emanuel Pires" WHERE id = 1; 
+
+DELETE FROM mercado.cleinte WHERE id =1;
+
+
+

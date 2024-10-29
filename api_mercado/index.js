@@ -1,16 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const indexRoutes = require("./routes/index.routes");
-const connection = require("./mysql-connection");
+
+const conn = require("./mysql-connection");
 
 const app = express();
 
 app.use(bodyParser.json());
+
 app.use(indexRoutes);
 
-connection.raw('SELECT 1').then(()=>{
+conn.raw('SELECT 1').then(() => {
     console.log(`Banco de dados conectado com sucesso!`);
-}).catch((erro)=>{
+}).catch((erro) => {
     console.log(`Erro ao conectar ao banco de dados ${erro}`);
 });
 
