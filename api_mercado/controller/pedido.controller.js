@@ -28,11 +28,38 @@ module.exports = ({
         };
     },
 
-    atualizar: (req,res) =>{
+    atualizar: async (req,res) =>{
+        try {
+            const {id} = req.params;
 
+            const {id_produto, quantidade} = req.body;
+
+            if(!id_produto){
+                return res.status(400).send("O ID do produto esta faltando");
+            }else if(!quantidade){
+                return res.status(400).send("Está faltando a quantidade do produto escolhido");
+            }
+
+            const produto = await conn.select("preco").from("produto").where({id: id_produto});
+            const total = quantidade * produto[0].preco;
+            const data = await conn("pedido").update({id_produto, quantidade, total}).where({id});
+
+            return res.status(200).send("O Pedido foi atualizado com sucesso!");
+        } catch (error) {
+            console.log(error);
+            return res.status(500).send("Erro ao realizar atualização do pedido");
+        }
     },
-    deletar: (req,res) =>{
+    deletar: async (req,res) =>{
+        try {
+            const {id} = req.params;
 
+            const data = await conn("pedido").delete({id});
+            return res.status(200).send("O pedido foi deletado com sucesso");
+        } catch (error) {
+            console.log(error);
+            return res.status(500).send("Erro ao realizar atualização do pedido");
+        }
     },
     consulta: async (req,res) =>{
         try{
