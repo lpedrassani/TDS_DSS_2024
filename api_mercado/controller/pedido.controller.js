@@ -55,7 +55,8 @@ module.exports = ({
             const {id} = req.params;
 
             const data = await conn("pedido").delete({id});
-            return res.status(200).send("O pedido foi deletado com sucesso");
+            
+            return res.status(200).send("O pedido foi deletado com sucesso");   
         } catch (error) {
             console.log(error);
             return res.status(500).send("Erro ao realizar atualização do pedido");
