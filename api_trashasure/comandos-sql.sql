@@ -23,12 +23,12 @@ create table postoDeColeta(
     cnpj varchar(255),
     endereco varchar(255),
     numero int,
-    status boolean,
+    status boolean
 );
 
 create table materiais(
 
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nome varchar(255),
     classificacao varchar(255),
     negociavel boolean
