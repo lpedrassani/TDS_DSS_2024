@@ -5,34 +5,13 @@ const alunos = [];
 module.exports = ({
     cadastrar: (req, res) => {
 
-        const { ra, nome, email } = req.body;
-
-    if (!ra) {
-        return resp.status(400).send("É obrigatório enviar o campo RA");
-    }
-    else if (!nome) {
-        return res.status(400).send("É obrigatório enviar o campo nome");
-    }
-    else if (!email) {
-        return res.status(400).send("É obrigatório enviar o campo email");
-    }
-
-    const existe_ra = alunos.filter((item) => item.ra == ra);
-
-    if (existe_ra.length) {
-        return res.status(404).send(`O Registro Acadêmico ${ra} já está em uso`);
-    }
-    else {
         alunos.push(req.body);
-    }
 
-    return res.status(200).send("Aluno cadastrado com sucesso!");
+        return res.send(req.body);
     },
-
     consultar: (req, res) => {
         return res.send(alunos);
     },
-
     atualizar: (req, res) => {
 
         const { nome, email, ra } = req.body;

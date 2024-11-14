@@ -7,6 +7,6 @@ const routes = express.Router();
 routes.post("/", professorController.cadastrar);
 routes.get("/", professorController.consultar);
 routes.put("/", professorController.atualizar);
-routes.delete("/:id([0-9]+)", professorController.deletar)
+routes.delete("/", professorController.deletar)
 
 module.exports = routes;

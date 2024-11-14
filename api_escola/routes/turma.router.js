@@ -7,6 +7,6 @@ const routes = express.Router();
 routes.post("/", turmaController.cadastrar);
 routes.get("/", turmaController.consultar);
 routes.put("/", turmaController.atualizar);
-routes.delete("/:id([0-9]+)", turmaController.deletar)
+routes.delete("/", turmaController.deletar)
 
 module.exports = routes;
