@@ -1,86 +1,75 @@
 const conn = require("../mysql-connection");
 
+module.exports = {
+    cadastrar: async (req, res) => {
+        const { id_cliente, id_produto, quantidade } = req.body;
 
-module.exports = ({
-    cadastro : async (req,res) =>{
-        try{
-            const {id_cliente, id_produto, quantidade} = req.body;
-
-            if(!id_produto){
-                return res.status(400).send("O ID do produto esta faltando");
-            }else if(!id_cliente){
-                return res.status(400).send("O ID do Cliente esta faltando");
-            }
-            else if(!quantidade){
-                return res.status(400).send("Está faltando a quantidade do produto escolhido");
-            }
-
-            const produto = await conn.select("preco").from("produto").where({id: id_produto});
-            const total = quantidade * produto[0].preco;
-            const data = await conn("pedido").insert({id_cliente, id_produto, quantidade, total});
-
-            return res.status(200).send("O Pedido foi realizado com sucesso!");
-
-            
-        }catch(error){
-            console.log(error);
-            return res.status(500).send("Ocorreu um erro ao realizar o pedido");
-        };
-    },
-
-    atualizar: async (req,res) =>{
         try {
-            const {id} = req.params;
+            const cliente = await conn.select()
+                .from("cliente")
+                .where({ id: id_cliente });
 
-            const {id_produto, quantidade} = req.body;
-
-            if(!id_produto){
-                return res.status(400).send("O ID do produto esta faltando");
-            }else if(!quantidade){
-                return res.status(400).send("Está faltando a quantidade do produto escolhido");
+            if (cliente.length <= 0) {
+                return res.status(400).send({ msg: `O código ${id_cliente} do cliente não existe!` });
             }
 
-            const produto = await conn.select("preco").from("produto").where({id: id_produto});
-            const total = quantidade * produto[0].preco;
-            const data = await conn("pedido").update({id_produto, quantidade, total}).where({id});
+            const produto = await conn.select()
+                .from("produto")
+                .where({ id: id_produto });
 
-            return res.status(200).send("O Pedido foi atualizado com sucesso!");
+            if (produto.length <= 0) {
+                return res.status(400).send({ msg: `O código ${id_produto} do não existe!` })
+            }
+
+            if (quantidade <= 0) {
+                return res.status(309).send({ msg: "A quantidade deve ser maior do que zero!" })
+            }
+
+            var total = quantidade * produto[0].preco;
+
+            await conn("pedido").insert({
+                id_cliente,
+                id_produto,
+                quantidade,
+                total
+            });
+
+            return res.status(200).send({ msg: "Pedido Cadastrado com sucesso!" });
         } catch (error) {
             console.log(error);
-            return res.status(500).send("Erro ao realizar atualização do pedido");
+            return res.status(500).send({ msg: "Erro ao cadastrar um pedido!" });
         }
     },
-    deletar: async (req,res) =>{
+    consultar: async (req, res) => {
         try {
-            const {id} = req.params;
 
-            const data = await conn("pedido").delete({id});
-            
-            return res.status(200).send("O pedido foi deletado com sucesso");   
+            const data = await conn.select(
+                "pedido.id",
+                "pedido.id_cliente",
+                "cliente.nome as nome_cliente",
+                "pedido.id_produto",
+                "produto.nome as nome_produto",
+                "produto.preco",
+                "pedido.quantidade",
+                "pedido.total"
+            ).from("pedido")
+                .join("cliente", "cliente.id", "pedido.id_cliente")
+                .join("produto", "produto.id", "pedido.id_produto");
+
+            res.status(200).send(data);
+
         } catch (error) {
-            console.log(error);
-            return res.status(500).send("Erro ao realizar atualização do pedido");
+            res.status(500).send({ msg: "Erro ao carregar pedidos" })
         }
     },
-    consulta: async (req,res) =>{
-        try{
-            const data = await conn.raw(`select
-                id_cliente as ID_do_Cliente,
-                cliente.nome as Nome,
-                cliente.telefone as Telefone,
-                id_produto as ID_do_Produto,
-                produto.nome as Nome_do_Produto,
-                produto.preco as Preco,
-                pedido.quantidade as Quantidade,
-                pedido.total as Total
-                from pedido
-                join cliente on pedido.id_cliente = cliente.id
-                join produto on pedido.id_produto = produto.id;`);
 
-                return res.send(data[0]);
-        }catch(error){
-            console.log(error);
-            return res.status(500).send("Ocorreu um erro ao realizar a Consulta");
+    deletar: async (req, res) => {
+        const { id } = req.params;
+        try {
+            await conn("pedido").del().where({ id })
+            res.status(200).send({ msg: "Pedido deletado com sucesso" });
+        } catch (error) {
+            res.status(500).send({ msg: "Erro ao deletar pedido" })
         }
     }
-});
+};

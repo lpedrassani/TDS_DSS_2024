@@ -1,96 +1,89 @@
 const conn = require("../mysql-connection");
 
-
-module.exports = ({
+// CRUD
+module.exports = {
     cadastro: async (req, res) => {
+        const { nome, preco } = req.body;
+
+        if (!nome) {
+            return res.status(309).send({ msg: "O campo nome é obrigatorio!" });
+        }
+
+        if (!preco) {
+            return res.status(309).send({ msg: "O campo preco é obrigatorio!" });
+        }
+
+
         try {
-            const { nome, preco } = req.body;
+            const produto = await conn("produto").insert({ nome, preco });
 
-            if (!nome) {
-                return res.status(400).send("O campo nome está faltando");
-            }
-            else if (!preco) {
-                return res.status(400).send("O campo preço está faltando!");
-            }
-            else if(typeof preco !== "number"){
-                return res.status(400).send("O campo preço precisar estar no formato numérico");
-            }
-
-            const data = await conn.select().from("produto").where({ nome });
-
-            if (data.length > 0) {
-                return res.status(400).send("Produto já cadastrado");
-            } else {
-                await conn.raw(`insert into produto (nome, preco) values ("${nome}", ${preco})`);
-                return res.send("Os dados foram inseridos com sucesso no banco de dados");
-            }
+            return res.status(200).send({
+                msg : "Produto cadastrado com sucesso!"
+            });
 
         } catch (error) {
             console.log(error);
-            return res.status(500).send({ msg: "erro ao cadastrar os produtos!" });
-        };
+            return res.status(500).send({ msg: "Erro ao cadastrar o produto!" });
+        }
+
+
     },
     consultar: async (req, res) => {
-
         try {
-            const data = await conn.raw("select * from produto");
-            return res.send(data[0]);
+            const data = await conn.select().from("produto");
+            return res.status(200).send(data);
         } catch (error) {
             console.log(error);
-            return res.status(500).send({ msg: "erro ao consultar os produtos!" });
-        };
+            return res.status(500).send({ msg: "Erro ao consultar produtos!" });
+        }
     },
-    atualizar: async (req, res) =>{
-        try{
-            const {nome, preco, id, status} = req.body;
+    atualizar: async (req, res) => {
+        const { nome, preco, status } = req.body;
+        const { id } = req.params;
 
-            if(!nome){
-                return res.status(400).send({msg: "O campo nome está faltando!"});
-            }else if(!preco){
-                return res.status(400).send({msg: "O campo preço está faltando!"});
-            }else if(!id){
-                return res.status(400).send({msg: "O campo ID está faltando!"});
-            }else if(!status){
-                return res.status(400).send({msg: "O campo STATUS está faltando!"});
+        try {
+            const produto = await conn.select().from("produto").where({ id });
+            
+            if (produto.length <= 0) {
+                return res.status(404).send({ msg: `O código ${id} não existe!` })
             }
 
-            const data = await conn.raw(`update produto set nome = '${nome}',
-                 preco = '${preco}',
-                 status = ${status} where id = ${id}`);
+            await conn("produto").update({
+                nome,
+                preco,
+                status
+            }).where({ id });
 
-                 return res.send({nome,preco,status,id});
+            // UPDATE PRODUTO SET (NOME, PRECO, STATUS) VALUES("PASTEL", 1, true);
 
+            return res.status(200).send({ msg : "Produto atualizado com sucesso!"});
 
-        }catch(error){
+        } catch (error) {
             console.log(error);
-            return res.status(500).send({msg: "Erro ao realizar atualização do produto"});
-        };
+            return res.status(500).send({ msg: "Erro ao atualizar o produto" });
+        }
+
     },
-    deletar: async (req, res) =>{
-        try{
-            const {id} = req.body;
+    deletar: async (req, res) => {
+        const { id } = req.params;
 
-            if(!id){
-                return res.status(400).send("O campo ID do produto está faltando");
-            }
-
-            await conn.raw(`delete from produto where id = ${id}`);
-
-            return res.status(200).send({msg: "O produto foi deletado com sucesso"});
-        }catch(error){
+        try {
+            await conn("produto").where({ id }).del();
+            return res.status(200).send({ msg: "Produto excluido com sucesso!" });
+        } catch (error) {
             console.log(error);
-            return res.status(500).send({msg: "Erro ao deletar o produto"});
-        };
+            res.status(500).send({ msg: "Erro ao deletar o pedido!" });
+        }
     },
-    buscaPorId: async (req,res) =>{
-        try{
-            const {id} = req.params;
+    buscaPorId: async (req, res) => {
+        const { id } = req.params;
 
-            const data = await conn.raw(`select * from produto where id = ${id}`);
-            return res.status(200).send(data[0]);
-        }catch(error){
+        try {
+            const produto = await conn.select().from("produto").where({ id });
+            return res.status(200).send(produto);
+        } catch (error) {
             console.log(error);
-            return res.status(500).send({msg: "Erro ao consultar o ID"});
-        };
+            return res.status(500).send({ msg: "erro ao consultar produto!" });
+        }
     }
-});
+}

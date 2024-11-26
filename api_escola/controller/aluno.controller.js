@@ -2,7 +2,7 @@
 const alunos = [];
 
 //CRUD
-module.exports = ({
+module.exports = ({ 
     cadastrar: (req, res) => {
 
         alunos.push(req.body);

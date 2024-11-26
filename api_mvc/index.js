@@ -8,6 +8,6 @@ app.use(bodyParser.json());
 
 app.use(indexRoutes);
 
-app.listen(8080, ()=>{
-    console.log("O servidor está rodando na porta 8080!");
-});;
+app.listen(8080, () => {
+    console.log("O servidor está rodando na porta 8080! 🚀");
+});

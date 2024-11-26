@@ -1,8 +1,13 @@
 const conn = require("../mysql-connection");
 
+//CRUD
 module.exports = ({
     cadastro: (req, res) => {
         const { nome, telefone } = req.body;
+
+        if (!nome) {
+            return res.status(309).send({ msg: "O campo nome é obrigatorio no cadastro de cliente!" });
+        }
 
         var comando = ``;
 
@@ -72,6 +77,6 @@ module.exports = ({
             console.log(error);
             res.status(500).send("Erro ao consultar o cliente!");
         });
-        
+
     }
 })

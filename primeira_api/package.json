@@ -1,16 +1,20 @@
 {
   "name": "primeira_api",
   "version": "1.0.0",
-  "description": "Essa é a minha primeira Api desenvolvida em Node",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "nodemon node index.js"
   },
-  "author": "Leonardo Pedrassani Dalabarba",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.3",
-    "express": "^4.20.0"
+    "express": "^3.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }
