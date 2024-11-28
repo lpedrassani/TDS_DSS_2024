@@ -1,7 +1,9 @@
 
-function Produto(){
-    return(
-        <h1>Produto</h1>
+function Produto() {
+    return (
+        <>  
+        
+        </>
     )
 }
 
