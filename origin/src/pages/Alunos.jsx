@@ -9,7 +9,7 @@ function Alunos() {
     const [nome, setNome] = useState();
     const [email, setEmail] = useState();
 
-    const [alunos, setAlunos] = useState();
+    const [alunos, setAlunos] = useState();    
 
     useEffect(() => {
         consultaAlunos();

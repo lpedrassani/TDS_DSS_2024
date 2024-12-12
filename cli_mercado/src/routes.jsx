@@ -6,15 +6,13 @@ import Pedido from "./pages/pedido"
 
 function AppRoutes() {
     return (
-        <>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/cliente" element={<Cliente />}></Route>
-                    <Route path="/produto" element={<Produto />}></Route>
-                    <Route path="/pedido" element={<Pedido />}></Route>
-                </Routes>
-            </BrowserRouter>
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/cliente" element={<Cliente />}></Route>
+                <Route path="/produto" element={<Produto />}></Route>
+                <Route path="/pedido" element={<Pedido />}></Route>
+            </Routes>
+        </BrowserRouter>
     )
 }
 
