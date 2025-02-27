@@ -1,0 +1,12 @@
+Teste de Cadastro de Posto de Coleta: Testa a rota /cadastraColeta, 
+enviando dados para criar um posto de coleta e verifica se a resposta tem o status 201 e se a propriedade id está presente.
+
+Teste de Listagem de Postos de Coleta: Testa a rota /listaColeta e verifica se a resposta é um array.
+
+Teste de Cadastro de Produto: Testa a rota /produtos para cadastrar um produto e verifica se a resposta 
+tem o status 201 e se a propriedade id está presente.
+
+Teste de Listagem de Produtos: Testa a rota /produtos e verifica se a resposta é um array.
+
+Fechamento da Conexão com o Banco de Dados: Após a execução dos testes, a conexão com o banco de dados é 
+encerrada para evitar vazamentos de conexão.
